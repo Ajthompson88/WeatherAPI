@@ -1,12 +1,12 @@
 document.getElementById('search-form').addEventListener('submit', function(event) {
   event.preventDefault();
-  const city = document.getElementById('city-input').value;
+  const city = document.getElementById('search-input').value;
   fetchWeather(city);
   saveToHistory(city);
 });
 
 function fetchWeather(city) {
-  const apiKey = 'weather_api'; 
+  const apiKey = 'YOUR_API_KEY'; // Replace with your actual OpenWeatherMap API key
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
 
   fetch(url)
@@ -62,7 +62,7 @@ function saveToHistory(city) {
       const searchHistory = document.getElementById('search-history');
       searchHistory.innerHTML = '';
       data.forEach(item => {
-        searchHistory.innerHTML += `<p>${item}</p>`;
+        searchHistory.innerHTML += `<p>${item.city}</p>`;
       });
     });
 }

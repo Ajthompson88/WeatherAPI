@@ -17,14 +17,22 @@
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
 
     /* Type Checking */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": true, /* Enable all strict type-checking options. */
+    "noUnusedLocals": true, /* Report errors on unused local variables. */
+    "noUnusedParameters": true, /* Report errors on unused parameters. */
+    "noFallthroughCasesInSwitch": true, /* Ensure that switch statements have no fall-through cases. */
     "exactOptionalPropertyTypes": true, /* Interpret optional property types as written, rather than adding 'undefined'. */
     "noImplicitReturns": true, /* Enable error reporting for codepaths that do not explicitly return in a function. */
     "noImplicitOverride": true, /* Ensure overriding members in derived classes are marked with an override modifier. */
-    "useUnknownInCatchVariables": true /* Ensure 'unknown' is used for catch clause variables. */
+    "useUnknownInCatchVariables": true, /* Ensure 'unknown' is used for catch clause variables. */
+
+    /* Output */
+    "outDir": "./dist", /* Specify the output directory for compiled files. */
+    "rootDir": "./src", /* Specify the root directory of input files. */
+
+    /* Miscellaneous */
+    "skipLibCheck": true /* Skip type checking of declaration files. */
   },
-  "include": ["src/**/*"] /* Specify the files or directories to include in the compilation. */
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

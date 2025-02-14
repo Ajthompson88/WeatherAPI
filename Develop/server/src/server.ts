@@ -1,30 +1,27 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import weatherRoutes from './routes/api/weatherRoutes';
+import weatherRoutes from './routes/api/weatherRoutes.js';
+import htmlRoutes from './routes/htmlRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-dotenv.config();
 
-// Import the routes
-import routes from './routes/index.js';
+dotenv.config();
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static('public'));
-app.use(express.json());
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.static(path.join(__dirname, '../../client/public')));
+app.use(express.json());
+
 app.use('/api/weather', weatherRoutes);
+app.use(htmlRoutes);
 
-// TODO: Implement middleware to connect the routes
-app.use(routes);
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/public/index.html'));
 });
 
 // Start the server on the port

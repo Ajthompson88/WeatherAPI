@@ -1,0 +1,30 @@
+{
+  "name": "weather-api",
+  "version": "1.0.0",
+  "description": "API for viewing weather in different cities and for different days. ",
+  "homepage": "https://github.com/Ajthompson88/Mod9Challenge#readme",
+  "bugs": {
+    "url": "https://github.com/Ajthompson88/Mod9Challenge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ajthompson88/Mod9Challenge.git"
+  },
+  "license": "ISC",
+  "author": "Andrew Thompson",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "run test",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

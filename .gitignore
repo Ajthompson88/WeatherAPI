@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Log files
+logs/
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Optional: Exclude search history if you don't want to track it in Git
+# searchHistory.json

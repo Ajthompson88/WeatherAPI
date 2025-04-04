@@ -2,24 +2,35 @@
   "name": "weather-api",
   "version": "1.0.0",
   "description": "API for viewing weather in different cities and for different days. ",
-  "homepage": "https://github.com/Ajthompson88/Mod9Challenge#readme",
+  "homepage": "https://github.com/Ajthompson88/WeatherAPI#readme",
+  "main": "server.js",
   "bugs": {
-    "url": "https://github.com/Ajthompson88/Mod9Challenge/issues"
+    "url": "https://github.com/Ajthompson88/WeatherAPI/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ajthompson88/Mod9Challenge.git"
+    "url": "git+https://github.com/Ajthompson88/WeatherAPI.git"
   },
   "license": "ISC",
   "author": "Andrew Thompson",
   "type": "commonjs",
-  "main": "server.js",
   "scripts": {
-    "test": "run test",
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run client:build && npm run server",
+    "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "client:build": "cd client && npm run build",
+    "client:dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "render-build": "npm install && npm run build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.2",
     "axios": "^1.8.4",
+    "bootstrap": "^5.3.3",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "uuid": "^11.1.0"

@@ -35,34 +35,43 @@ API Calls
 */
 
 const fetchWeather = async (cityName: string) => {
-  const response = await fetch('/api/weather/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ cityName }),
-  });
+  try {
+    const response = await fetch('/api/weather', {  // POST /api/weather
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ city: cityName }),
+    });
 
-  const weatherData = await response.json();
+    // Check if response is not ok
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch weather data');
+    }
 
-  console.log('weatherData: ', weatherData);
+    const weatherData = await response.json();
+    console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+    renderCurrentWeather(weatherData[0]);
+    renderForecast(weatherData.slice(1));
+  } catch (error: any) {
+    console.error('Error in fetchWeather:', error);
+  }
 };
 
 const fetchSearchHistory = async () => {
-  const history = await fetch('/api/weather/history', {
+  const response = await fetch('/api/history', {  // GET /api/history
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
-  return history;
+  return response;
 };
 
 const deleteCityFromHistory = async (id: string) => {
-  await fetch(`/api/weather/history/${id}`, {
+  await fetch(`/api/history/${id}`, {  // DELETE /api/history/:id
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -289,25 +298,3 @@ searchForm?.addEventListener('submit', handleSearchFormSubmit);
 searchHistoryContainer?.addEventListener('click', handleSearchHistoryClick);
 
 getAndRenderHistory();
-
-document.addEventListener('DOMContentLoaded', () => {
-  const submitButton = document.getElementById('submitBtn');
-  if (submitButton) {
-    submitButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Submit button clicked');
-      // Your submission logic here
-    });
-  }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const searchButton = document.getElementById('search-button') as HTMLButtonElement | null;
-  if (searchButton) {
-    searchButton.addEventListener('click', (event: Event) => {
-      event.preventDefault();
-      console.log('Search button clicked');
-      // Insert your submission logic here—for example, submit the form or process the input
-    });
-  }
-});

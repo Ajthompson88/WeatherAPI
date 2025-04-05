@@ -1,54 +1,101 @@
-import { Router } from 'express';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-const historyRouter = Router();
-const historyFilePath = path.join(__dirname, '../../server.searchHistory.json');
+// Define a City class with name and id properties
+class City {
+  constructor(public id: string, public name: string) {}
+}
 
-// GET the search history
-historyRouter.get('/history', async (_req, res) => {
-  try {
-    const data = await fs.readFile(historyFilePath, 'utf-8');
-    const history = JSON.parse(data);
-    res.json(history);
-  } catch (error) {
-    console.error('Error reading search history:', error);
-    res.status(500).json({ error: 'Error reading search history' });
+class HistoryService {
+  private historyFilePath: string;
+  private history: string[] = [];
+
+  constructor() {
+    // Assume searchHistory.json is located in the same directory as this file.
+    this.historyFilePath = path.resolve(__dirname, 'searchHistory.json');
   }
-});
 
-// POST a new search term to the history
-historyRouter.post('/history', async (_req, res) => {
-  const newEntry = _req.body;
-  try {
-    const data = await fs.readFile(historyFilePath, 'utf-8');
-    const history = JSON.parse(data);
-    history.push(newEntry);
-    await fs.writeFile(historyFilePath, JSON.stringify(history, null, 2));
-    res.status(201).json({ message: 'Search history updated' });
-  } catch (error) {
-    console.error('Error updating search history:', error);
-    res.status(500).json({ error: 'Error updating search history' });
+  // Define a read method that reads from the searchHistory.json file
+  private async read(): Promise<City[]> {
+    try {
+      const data = await fs.readFile(this.historyFilePath, 'utf-8');
+      const parsed = JSON.parse(data);
+      // Map raw objects to City instances
+      return parsed.map((item: any) => new City(item.id, item.name));
+    } catch (error) {
+      // If the file doesn't exist or an error occurs, return an empty array
+      return [];
+    }
   }
-});
 
-// DELETE a specific history entry by id
-historyRouter.delete('/history/:id', async (_req, res) => {
-  const idToDelete = _req.params.id;
-  try {
-    const data = await fs.readFile(historyFilePath, 'utf-8');
-    let history = JSON.parse(data);
-    history = history.filter((entry: any) => entry.id !== idToDelete);
-    await fs.writeFile(historyFilePath, JSON.stringify(history, null, 2));
-    res.json({ message: 'History entry deleted' });
-  } catch (error) {
-    console.error('Error deleting history entry:', error);
-    res.status(500).json({ error: 'Error deleting history entry' });
+  // Define a write method that writes the updated cities array to the searchHistory.json file
+  private async write(cities: City[]): Promise<void> {
+    await fs.writeFile(this.historyFilePath, JSON.stringify(cities, null, 2), 'utf-8');
   }
-});
 
-export default historyRouter;
+  // Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
+  async getCities(): Promise<City[]> {
+    return await this.read();
+  }
+
+  // Define an addCity method that adds a city to the searchHistory.json file
+  async addCity(cityName: string): Promise<City> {
+    const cities = await this.read();
+    // Generate a unique id (here using the current timestamp)
+    const newCity = new City(Date.now().toString(), cityName);
+    cities.push(newCity);
+    await this.write(cities);
+    return newCity;
+  }
+
+  // BONUS: Define a removeCity method that removes a city from the searchHistory.json file
+  async removeCity(id: string): Promise<City> {
+    const cities = await this.read();
+    const index = cities.findIndex(city => city.id === id);
+    if (index === -1) {
+      throw new Error('City not found');
+    }
+    const removedCity = cities.splice(index, 1)[0];
+    await this.write(cities);
+    return removedCity;
+  }
+
+  public addCityToHistory(city: string): void {
+    this.history.push(city);
+  }
+
+  public getHistory(): string[] {
+    return this.history;
+  }
+
+  public deleteCityFromHistory(id: number): string | null {
+    // For example purposes, treat id as an index
+    if (id < 0 || id >= this.history.length) {
+      return null;
+    }
+    return this.history.splice(id, 1)[0];
+  }
+}
+
+export default new HistoryService();
+export function addCityToHistory(city: string): void {
+  const historyService = new HistoryService();
+  historyService.addCityToHistory(city);
+}
+
+export function getHistory() {
+  throw new Error('Function not implemented.');
+}
+
+export function deleteCityFromHistory(id: number): string | null {
+  const historyService = new HistoryService();
+  return historyService.deleteCityFromHistory(id);
+}
+
+import historyService from './historyService';
+
+await historyService.addCity('New York');
+
+
+

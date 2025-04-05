@@ -30,12 +30,14 @@
     "@fortawesome/fontawesome-free": "^6.5.2",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
-    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
+    "vite": "^6.2.5",
+    "wait-on": "^8.0.3"
   }
 }

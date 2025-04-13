@@ -36,7 +36,7 @@ API Calls
 
 const fetchWeather = async (cityName: string) => {
   try {
-    const response = await fetch('/api/weather', {  // POST /api/weather
+    const response = await fetch('/api/weather', {  // Use absolute path
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const fetchWeather = async (cityName: string) => {
     }
 
     const weatherData = await response.json();
-    console.log('weatherData: ', weatherData);
+    // console.log('weatherData: ', weatherData);
 
     renderCurrentWeather(weatherData[0]);
     renderForecast(weatherData.slice(1));
@@ -61,7 +61,7 @@ const fetchWeather = async (cityName: string) => {
 };
 
 const fetchSearchHistory = async () => {
-  const response = await fetch('/api/history', {  // GET /api/history
+  const response = await fetch('routes/api/history', {  // GET /api/history
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -86,8 +86,10 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } = 
     currentWeather;
+
+  console.log('Current Weather Data:', currentWeather);
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
@@ -120,6 +122,8 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.innerHTML = '';
     forecastContainer.append(headingCol);
   }
+
+  //console.log('Forecast Data:', forecast);
 
   for (let i = 0; i < forecast.length; i++) {
     renderForecastCard(forecast[i]);

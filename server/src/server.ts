@@ -1,9 +1,9 @@
 import express from 'express';
 import routes from './routes/index.js';
 import weatherRoutes from './routes/api/weatherRoutes.js';
+import historyRoutes from './routes/api/historyRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,15 +23,19 @@ app.use(express.static(path.join(__dirname, '../../client/dist')));
 
 // Root route to serve the frontend
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
 // Mount the modular routers
 app.use('/api', routes);
-
-// Mount the weather route
 app.use('/api/weather', weatherRoutes);
+app.use('/api/history', historyRoutes);
+
+app.use((_req, res) => {
+res.status(404).send('Route Not Found');
+}
+);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+console.log(`Server is running on port ${port}`);
 });

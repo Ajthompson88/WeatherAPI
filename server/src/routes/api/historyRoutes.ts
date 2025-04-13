@@ -9,10 +9,10 @@ const historyService = new HistoryService();
 router.get('/', async (_req: Request, res: Response) => {
   try {
     const historyData = await historyService.getHistory();
-    return res.json(historyData);
+    res.json(historyData); // Ensure JSON response
   } catch (error: any) {
     console.error('Error in GET /api/history:', error);
-    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+    res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 });
 

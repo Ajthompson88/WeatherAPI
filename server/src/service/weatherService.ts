@@ -63,10 +63,7 @@ export default class WeatherService {
     return `${this.baseUrl}/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${this.apiKey}`;
   }
 
-  // Constructs the URL for the weather API request
-  private buildWeatherQuery(coordinates: Coordinates): string {
-    return `${this.baseUrl}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude=minutely,hourly,alerts&appid=${this.apiKey}&units=imperial`;
-  }
+  // (Removed unused buildWeatherQuery method)
 
   // Create fetchAndDestructureLocationData method: fetches and extracts coordinates for a given city
   private async fetchAndDestructureLocationData(query: string): Promise<Coordinates> {
@@ -76,11 +73,10 @@ export default class WeatherService {
 
   // Create fetchWeatherData method: fetches weather data using the coordinates
   private async fetchWeatherData(coordinates: Coordinates): Promise<any> {
-    const weatherUrl = this.buildWeatherQuery(coordinates);
+    const weatherUrl = `${this.baseUrl}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`;
     const response = await fetch(weatherUrl);
     if (!response.ok) {
-      console.error(response);
-      throw new Error(response.statusText);
+      throw new Error(`Failed to fetch weather data: ${response.statusText}`);
     }
     return response.json();
   }

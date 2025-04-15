@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "city": "charlotte",
+    "timestamp": "2025-04-15T05:13:02.830Z"
+  },
+  {
+    "id": 2,
+    "city": "San Diego",
+    "timestamp": "2025-04-15T05:13:12.571Z"
+  },
+  {
+    "id": 3,
+    "city": "Denver",
+    "timestamp": "2025-04-15T05:13:18.925Z"
+  }
+]

@@ -60,7 +60,7 @@ export default class WeatherService {
 
   // Constructs the URL for the geocoding API request
   private buildGeocodeQuery(query: string): string {
-    return `${this.baseUrl}/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${this.apiKey}`;
+    return `${this.baseUrl}/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&&appid=${this.apiKey}`;
   }
 
   // (Removed unused buildWeatherQuery method)
@@ -73,7 +73,7 @@ export default class WeatherService {
 
   // Create fetchWeatherData method: fetches weather data using the coordinates
   private async fetchWeatherData(coordinates: Coordinates): Promise<any> {
-    const weatherUrl = `${this.baseUrl}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`;
+    const weatherUrl = `${this.baseUrl}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&units=imperial&appid=${this.apiKey}`;
     const response = await fetch(weatherUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch weather data: ${response.statusText}`);
@@ -83,7 +83,7 @@ export default class WeatherService {
 
   // Build parseCurrentWeather method: extracts current weather details from the API response
   private parseCurrentWeather(response: any): Weather {
-    console.log(response);
+    //console.log(response);
     const current = response.list[0];
     return new Weather(
       this.city,
@@ -98,7 +98,7 @@ export default class WeatherService {
 
   // Complete buildForecastArray method: maps the daily forecast data into an array of Weather objects
   private buildForecastArray(currentWeather: Weather, weatherData: any): Weather[] {
-    console.log('Weather Data:', weatherData);
+    //console.log('Weather Data:', weatherData);
 
     // Filter the forecast to include only one entry per day (e.g., at 12:00:00)
     const dailyForecast = weatherData.list.filter((entry: any) => entry.dt_txt.includes('12:00:00'));
@@ -128,3 +128,4 @@ export default class WeatherService {
     return service.buildForecastArray(currentWeather, weatherData);
   }
 }
+

@@ -36,7 +36,7 @@ API Calls
 
 const fetchWeather = async (cityName: string) => {
   try {
-    const response = await fetch('/api/weather', {  // Use absolute path
+    const response = await fetch('/api/weather', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,15 +44,12 @@ const fetchWeather = async (cityName: string) => {
       body: JSON.stringify({ city: cityName }),
     });
 
-    // Check if response is not ok
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch weather data');
     }
 
     const weatherData = await response.json();
-    // console.log('weatherData: ', weatherData);
-
     renderCurrentWeather(weatherData[0]);
     renderForecast(weatherData.slice(1));
   } catch (error: any) {
@@ -60,23 +57,57 @@ const fetchWeather = async (cityName: string) => {
   }
 };
 
-const fetchSearchHistory = async () => {
-  const response = await fetch('routes/api/history', {  // GET /api/history
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return response;
-};
+async function fetchSearchHistory() {
+  try {
+    const response = await fetch('/api/history');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const history: { id: number; city: string }[] = await response.json();
+    console.log('Search History:', history);
 
-const deleteCityFromHistory = async (id: string) => {
-  await fetch(`/api/history/${id}`, {  // DELETE /api/history/:id
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+    if (!searchHistoryContainer) {
+      console.error("Element with ID 'history' not found.");
+      return;
+    }
+
+    searchHistoryContainer.innerHTML = ''; // Clear existing content
+    history.forEach((entry) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = entry.city;
+
+      // Add a delete button for each city
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.classList.add('delete-btn');
+      deleteButton.addEventListener('click', () => deleteCityFromHistory(entry.id));
+
+      listItem.appendChild(deleteButton);
+      searchHistoryContainer.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error('Error fetching search history:', error);
+  }
+}
+
+const deleteCityFromHistory = async (id: number) => {
+  try {
+    const response = await fetch(`/api/history/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete city with ID ${id}`);
+    }
+
+    console.log(`City with ID ${id} deleted successfully.`);
+    fetchSearchHistory(); // Refresh the search history
+  } catch (error) {
+    console.error('Error deleting city from history:', error);
+  }
 };
 
 /*
@@ -86,12 +117,9 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } = 
+  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
     currentWeather;
 
-  console.log('Current Weather Data:', currentWeather);
-
-  // convert the following to typescript
   heading.textContent = `${city} (${date})`;
   weatherIcon.setAttribute(
     'src',
@@ -123,11 +151,9 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.append(headingCol);
   }
 
-  //console.log('Forecast Data:', forecast);
-
-  for (let i = 0; i < forecast.length; i++) {
-    renderForecastCard(forecast[i]);
-  }
+  forecast.forEach((forecastItem: any) => {
+    renderForecastCard(forecastItem);
+  });
 };
 
 const renderForecastCard = (forecast: any) => {
@@ -136,7 +162,6 @@ const renderForecastCard = (forecast: any) => {
   const { col, cardTitle, weatherIcon, tempEl, windEl, humidityEl } =
     createForecastCard();
 
-  // Add content to elements
   cardTitle.textContent = date;
   weatherIcon.setAttribute(
     'src',
@@ -149,25 +174,6 @@ const renderForecastCard = (forecast: any) => {
 
   if (forecastContainer) {
     forecastContainer.append(col);
-  }
-};
-
-const renderSearchHistory = async (searchHistory: any) => {
-  const historyList = await searchHistory.json();
-
-  if (searchHistoryContainer) {
-    searchHistoryContainer.innerHTML = '';
-
-    if (!historyList.length) {
-      searchHistoryContainer.innerHTML =
-        '<p class="text-center">No Previous Search History</p>';
-    }
-
-    // * Start at end of history array and count down to show the most recent cities at the top.
-    for (let i = historyList.length - 1; i >= 0; i--) {
-      const historyItem = buildHistoryListItem(historyList[i]);
-      searchHistoryContainer.append(historyItem);
-    }
   }
 };
 
@@ -215,54 +221,13 @@ const createForecastCard = () => {
   };
 };
 
-const createHistoryButton = (city: string) => {
-  const btn = document.createElement('button');
-  btn.setAttribute('type', 'button');
-  btn.setAttribute('aria-controls', 'today forecast');
-  btn.classList.add('history-btn', 'btn', 'btn-secondary', 'col-10');
-  btn.textContent = city;
-
-  return btn;
-};
-
-const createDeleteButton = () => {
-  const delBtnEl = document.createElement('button');
-  delBtnEl.setAttribute('type', 'button');
-  delBtnEl.classList.add(
-    'fas',
-    'fa-trash-alt',
-    'delete-city',
-    'btn',
-    'btn-danger',
-    'col-2'
-  );
-
-  delBtnEl.addEventListener('click', handleDeleteHistoryClick);
-  return delBtnEl;
-};
-
-const createHistoryDiv = () => {
-  const div = document.createElement('div');
-  div.classList.add('display-flex', 'gap-2', 'col-12', 'm-1');
-  return div;
-};
-
-const buildHistoryListItem = (city: any) => {
-  const newBtn = createHistoryButton(city.name);
-  const deleteBtn = createDeleteButton();
-  deleteBtn.dataset.city = JSON.stringify(city);
-  const historyDiv = createHistoryDiv();
-  historyDiv.append(newBtn, deleteBtn);
-  return historyDiv;
-};
-
 /*
 
 Event Handlers
 
 */
 
-const handleSearchFormSubmit = (event: any): void => {
+const handleSearchFormSubmit = (event: Event): void => {
   event.preventDefault();
 
   if (!searchInput.value) {
@@ -270,23 +235,31 @@ const handleSearchFormSubmit = (event: any): void => {
   }
 
   const search: string = searchInput.value.trim();
-  fetchWeather(search).then(() => {
-    getAndRenderHistory();
-  });
+
+  // Fetch weather data
+  fetchWeather(search)
+    .then(() => {
+      // Add the searched city to the search history
+      return fetch('/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city: search }),
+      });
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to add city to search history');
+      }
+      console.log('City added to search history successfully.');
+      // Refresh the search history
+      fetchSearchHistory();
+    })
+    .catch((error) => {
+      console.error('Error handling search form submission:', error);
+    });
+
+  // Clear the search input
   searchInput.value = '';
-};
-
-const handleSearchHistoryClick = (event: any) => {
-  if (event.target.matches('.history-btn')) {
-    const city = event.target.textContent;
-    fetchWeather(city).then(getAndRenderHistory);
-  }
-};
-
-const handleDeleteHistoryClick = (event: any) => {
-  event.stopPropagation();
-  const cityID = JSON.parse(event.target.getAttribute('data-city')).id;
-  deleteCityFromHistory(cityID).then(getAndRenderHistory);
 };
 
 /*
@@ -295,10 +268,5 @@ Initial Render
 
 */
 
-const getAndRenderHistory = () =>
-  fetchSearchHistory().then(renderSearchHistory);
-
 searchForm?.addEventListener('submit', handleSearchFormSubmit);
-searchHistoryContainer?.addEventListener('click', handleSearchHistoryClick);
-
-getAndRenderHistory();
+document.addEventListener('DOMContentLoaded', fetchSearchHistory);

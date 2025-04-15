@@ -38,4 +38,6 @@ res.status(404).send('Route Not Found');
 
 app.listen(port, () => {
 console.log(`Server is running on port ${port}`);
+console.log(`Server listening on http://localhost:${port}`);
+console.log(`Server directory: ${__dirname}`);
 });

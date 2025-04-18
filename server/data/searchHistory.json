@@ -13,5 +13,15 @@
     "id": 3,
     "city": "Denver",
     "timestamp": "2025-04-15T05:13:18.925Z"
+  },
+  {
+    "id": 4,
+    "city": "Denver",
+    "timestamp": "2025-04-17T22:11:13.113Z"
+  },
+  {
+    "id": 5,
+    "city": "Mooresville",
+    "timestamp": "2025-04-17T22:14:32.312Z"
   }
 ]

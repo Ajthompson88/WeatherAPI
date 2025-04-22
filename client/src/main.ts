@@ -72,18 +72,16 @@ async function fetchSearchHistory() {
     }
 
     searchHistoryContainer.innerHTML = ''; // Clear existing content
-    history.forEach((entry) => {
-      const listItem = document.createElement('li');
-      listItem.textContent = entry.city;
 
-      // Add a delete button for each city
+    history.forEach((entry) => {
+      // Create a delete button for each city
       const deleteButton = document.createElement('button');
-      deleteButton.textContent = 'Delete';
-      deleteButton.classList.add('delete-btn');
+      deleteButton.textContent = `${entry.city} (Delete)`; // Only show "Delete" text
+      deleteButton.classList.add('delete-btn'); // Add a class for styling
       deleteButton.addEventListener('click', () => deleteCityFromHistory(entry.id));
 
-      listItem.appendChild(deleteButton);
-      searchHistoryContainer.appendChild(listItem);
+      // Append the delete button directly to the container
+      searchHistoryContainer.appendChild(deleteButton);
     });
   } catch (error) {
     console.error('Error fetching search history:', error);

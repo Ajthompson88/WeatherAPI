@@ -1,27 +1,7 @@
 [
   {
     "id": 1,
-    "city": "charlotte",
-    "timestamp": "2025-04-15T05:13:02.830Z"
-  },
-  {
-    "id": 2,
-    "city": "San Diego",
-    "timestamp": "2025-04-15T05:13:12.571Z"
-  },
-  {
-    "id": 3,
-    "city": "Denver",
-    "timestamp": "2025-04-15T05:13:18.925Z"
-  },
-  {
-    "id": 4,
-    "city": "Denver",
-    "timestamp": "2025-04-17T22:11:13.113Z"
-  },
-  {
-    "id": 5,
     "city": "Mooresville",
-    "timestamp": "2025-04-17T22:14:32.312Z"
+    "timestamp": "2025-04-22T00:25:41.887Z"
   }
 ]

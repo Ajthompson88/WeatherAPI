@@ -1916,3 +1916,70 @@ label form [type='radio'] {
   background: -moz-linear-gradient(right, #20084a, #3463bc);
   background: linear-gradient(to left, #20084a, #3463bc);
 }
+
+/* Styling for the delete button */
+.delete-btn {
+  margin-left: 10px; /* Add spacing between the button and the city name */
+  padding: 0.3rem 0.6rem; /* Adjust padding for a compact button */
+  background-color: #5098e6; /* Red background for delete */
+  color: #ffffff; /* White text color */
+  border: none; /* Remove default border */
+  border-radius: 0.3rem; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 0.9rem; /* Slightly smaller font size */
+  transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+  background: linear-gradient(to left, #20084a, #5098e6);
+}
+
+.delete-btn:hover {
+  background-color: #2d3e50;
+  text-decoration: underline;
+}
+
+.delete-btn:active {
+  background-color: #2d3e50; /* Even darker red when clicked */
+  transform: scale(0.95); /* Slightly shrink the button on click */
+}
+
+/* Container for the city cards */
+.history-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next row */
+  gap: 1rem; /* Add spacing between cards */
+  justify-content: flex-start; /* Align cards to the left */
+  padding: 1rem;
+  background-color: #f9f9f9; /* Light background for the container */
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+/* Individual city card */
+.city-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px; /* Fixed width for each card */
+  padding: 1rem;
+  background-color: #ffffff; /* White background for the card */
+  border: 1px solid #ddd; /* Light border for the card */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Hover effect for the card */
+.city-card:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* City name inside the card */
+.city-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+

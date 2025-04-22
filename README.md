@@ -22,7 +22,7 @@ A simple web application that lets you search for a city’s current weather and
 
 ## Demo
 
-![searching for “San Diego” on the Weather Dashboard](docs/demo.gif)  
+![searching for your city on the Weather Dashboard](docs/demo.gif)  
 
 
 ---

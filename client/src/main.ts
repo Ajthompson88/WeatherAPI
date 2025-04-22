@@ -34,7 +34,7 @@ API Calls
 
 */
 
-const fetchWeather = async (cityName: string) => {
+const fetchWeather = async (cityName: string): Promise<void> => {
   try {
     const response = await fetch('/api/weather', {
       method: 'POST',
@@ -50,45 +50,47 @@ const fetchWeather = async (cityName: string) => {
     }
 
     const weatherData = await response.json();
+    if (!weatherData || weatherData.length === 0) {
+      throw new Error('No weather data received');
+    }
+
     renderCurrentWeather(weatherData[0]);
     renderForecast(weatherData.slice(1));
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in fetchWeather:', error);
   }
 };
 
-async function fetchSearchHistory() {
+const fetchSearchHistory = async (): Promise<void> => {
   try {
-    const response = await fetch('/api/history');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const history: { id: number; city: string }[] = await response.json();
-    console.log('Search History:', history);
-
     if (!searchHistoryContainer) {
       console.error("Element with ID 'history' not found.");
       return;
     }
 
+    const response = await fetch('/api/history');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const history: { id: number; city: string }[] = await response.json();
+    console.log('Search History:', history);
+
     searchHistoryContainer.innerHTML = ''; // Clear existing content
 
     history.forEach((entry) => {
-      // Create a delete button for each city
       const deleteButton = document.createElement('button');
-      deleteButton.textContent = `${entry.city} (Delete)`; // Only show "Delete" text
-      deleteButton.classList.add('delete-btn'); // Add a class for styling
+      deleteButton.textContent = `Delete ${entry.city} from history`;
+      deleteButton.classList.add('delete-btn');
       deleteButton.addEventListener('click', () => deleteCityFromHistory(entry.id));
-
-      // Append the delete button directly to the container
       searchHistoryContainer.appendChild(deleteButton);
     });
   } catch (error) {
     console.error('Error fetching search history:', error);
   }
-}
+};
 
-const deleteCityFromHistory = async (id: number) => {
+const deleteCityFromHistory = async (id: number): Promise<void> => {
   try {
     const response = await fetch(`/api/history/${id}`, {
       method: 'DELETE',
@@ -98,7 +100,8 @@ const deleteCityFromHistory = async (id: number) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to delete city with ID ${id}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Failed to delete city with ID ${id}`);
     }
 
     console.log(`City with ID ${id} deleted successfully.`);
@@ -232,12 +235,10 @@ const handleSearchFormSubmit = (event: Event): void => {
     throw new Error('City cannot be blank');
   }
 
-  const search: string = searchInput.value.trim();
+  const search = searchInput.value.trim();
 
-  // Fetch weather data
   fetchWeather(search)
     .then(() => {
-      // Add the searched city to the search history
       return fetch('/api/history', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -249,15 +250,15 @@ const handleSearchFormSubmit = (event: Event): void => {
         throw new Error('Failed to add city to search history');
       }
       console.log('City added to search history successfully.');
-      // Refresh the search history
       fetchSearchHistory();
     })
     .catch((error) => {
       console.error('Error handling search form submission:', error);
     });
 
-  // Clear the search input
-  searchInput.value = '';
+  if (searchInput) {
+    searchInput.value = '';
+  }
 };
 
 /*

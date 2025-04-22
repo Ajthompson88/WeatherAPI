@@ -1917,40 +1917,43 @@ label form [type='radio'] {
   background: linear-gradient(to left, #20084a, #3463bc);
 }
 
-/* Styling for the delete button */
-.delete-btn {
-  margin-left: 10px; /* Add spacing between the button and the city name */
-  padding: 0.3rem 0.6rem; /* Adjust padding for a compact button */
-  background-color: #5098e6; /* Red background for delete */
-  color: #ffffff; /* White text color */
-  border: none; /* Remove default border */
-  border-radius: 0.3rem; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 0.9rem; /* Slightly smaller font size */
-  transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
-  background: linear-gradient(to left, #20084a, #5098e6);
-}
-
-.delete-btn:hover {
-  background-color: #2d3e50;
-  text-decoration: underline;
-}
-
-.delete-btn:active {
-  background-color: #2d3e50; /* Even darker red when clicked */
-  transform: scale(0.95); /* Slightly shrink the button on click */
-}
-
-/* Container for the city cards */
+/* Container for stacking delete buttons vertically */
 .history-container {
   display: flex;
-  flex-wrap: wrap; /* Allow cards to wrap to the next row */
-  gap: 1rem; /* Add spacing between cards */
-  justify-content: flex-start; /* Align cards to the left */
+  flex-direction: column; /* Stack items vertically */
+  gap: 1rem; /* Add spacing between buttons */
   padding: 1rem;
-  background-color: #f9f9f9; /* Light background for the container */
+  background-color: #f9f9f9; /* Keep the existing light background */
   border-radius: 0.5rem;
   border: 1px solid #ddd;
+}
+
+/* Styling for the delete button */
+.delete-btn {
+  padding: 1rem; /* Keep the existing padding */
+  background-color: #5098e6; /* Keep the existing background color */
+  color: #ffffff; /* Keep the existing text color */
+  border: none; /* Keep the existing border style */
+  border-radius: 0.3rem; /* Keep the existing rounded corners */
+  cursor: pointer; /* Keep the pointer cursor on hover */
+  font-size: 0.9rem; /* Keep the existing font size */
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out; /* Keep the existing transition */
+  display: block; /* Ensure the button takes up its own line */
+  text-align: center; /* Center-align the button text */
+  margin: 10px;
+  background: linear-gradient(to left, #20084a, #3463bc);
+}
+
+/* Hover effect for the delete button */
+.delete-btn:hover {
+  background-color: #2d3e50; /* Keep the existing hover color */
+  text-decoration: underline; /* Keep the existing underline effect */
+}
+
+/* Active effect for the delete button */
+.delete-btn:active {
+  background-color: #2d3e50; /* Keep the existing active color */
+  transform: scale(0.95); /* Keep the existing shrink effect */
 }
 
 /* Individual city card */
